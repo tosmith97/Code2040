@@ -1,5 +1,5 @@
-import requests, json
-
+import requests, datetime
+import dateutil.parser as dp
 
 def step_one(token):
     payload = {'token': token, 'github': 'https://github.com/tosmith97/Code2040'}
@@ -50,11 +50,27 @@ def step_four(token):
             no_prefix.append(word)
     print dict
     print no_prefix
-
     payload2 = {'token': token, 'array': no_prefix}
     r = requests.post('http://challenge.code2040.org/api/prefix/validate', data=payload2)
     print r.text
 
+
+def step_five(token):
+    url = 'http://challenge.code2040.org/api/dating'
+    payload = {'token': token}
+    r = requests.post(url, data=payload)
+    dict = r.json()
+    datestamp = dict['datestamp']
+    interval = dict['interval']
+
+    d = dp.parse(datestamp)
+    new_datetime = d + datetime.timedelta(0, interval)
+    new_datestamp = new_datetime.isoformat()
+    new_datestamp = new_datestamp.replace('+00:00', 'Z')
+
+    payload2 = {'token': token, 'datestamp': new_datestamp}
+    r = requests.post('http://challenge.code2040.org/api/dating/validate', data=payload2)
+    print r.text
 
 token = 'a21f0f545e01aa117d5472938d1de09e'
 
