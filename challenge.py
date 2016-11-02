@@ -1,6 +1,7 @@
 import requests, datetime
 import dateutil.parser as dp
 
+
 def step_one(token):
     payload = {'token': token, 'github': 'https://github.com/tosmith97/Code2040'}
     r = requests.post('http://challenge.code2040.org/api/register', data=payload)
@@ -48,10 +49,10 @@ def step_four(token):
     for word in dict['array']:
         if not word.startswith(prefix):
             no_prefix.append(word)
-    print dict
-    print no_prefix
+
     payload2 = {'token': token, 'array': no_prefix}
-    r = requests.post('http://challenge.code2040.org/api/prefix/validate', data=payload2)
+    r = requests.post('http://challenge.code2040.org/api/prefix/validate', json=payload2)
+
     print r.text
 
 
@@ -66,6 +67,8 @@ def step_five(token):
     d = dp.parse(datestamp)
     new_datetime = d + datetime.timedelta(0, interval)
     new_datestamp = new_datetime.isoformat()
+
+    # not the best in terms of robustness, but got the job done
     new_datestamp = new_datestamp.replace('+00:00', 'Z')
 
     payload2 = {'token': token, 'datestamp': new_datestamp}
